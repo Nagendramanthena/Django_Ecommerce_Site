@@ -1,0 +1,193 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+
+     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+    <title>Ecommerce Site</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <div class="container">
+
+      <div class = "row">
+          <div class ="col-md-12">
+              <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Features</a>
+      </li>
+      <li class="nav-item">
+       <button id="cart" data-html ="true" type="button" class="btn btn-secondary" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
+sagittis lacus vel augue laoreet rutrum faucibus.">
+  Cart(0)
+</button>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+          </div>
+      </div>
+
+      <div class="row m-5">
+          <div class = "col-md-12">
+
+              <form class = "card card-sm">
+                  <div class="card-body row no-gutters align-items-center">
+                        <div class="col">
+                            <input type = "search" name="item_name" placeholder="Search for products" class="form-control-borderless">
+                        </div>
+                      <div class="col-auto">
+                            <button class="btn btn-success" type="submit">
+                              Search
+                            </button>
+                      </div>
+                  </div>
+
+              </form>
+
+          </div>
+      </div>
+
+
+
+      <div class="row">
+          {% for product in product_objects%}
+        <div class="col-md-3">
+            <div class="card">
+                <img src="{{product.image}}" class="card-img-top">
+                <div class="card-body">
+                    <div id = nm{{product.id}} class = "card-title">{{product.title}}</div>
+                    <div class="card-text">$ {{product.price}}</div>
+                    <a href="/{{product.id}}" class = "btn btn-warning">View</a>
+                    <button id = "{{product.id}}" class = "btn atc btn-warning">Add to cart</button>
+                </div>
+
+            </div>
+        </div>
+          {% endfor %}
+      </div>
+
+      <div class="row">
+          <div class="col-md-3 offset-md-4">
+              <ul class="pagination">
+                {% if product_objects.has_previous %}
+                  <li class="page-item">
+                      <a class = "page-link" href = "?page={{product_objects.previous_page_number}}">
+                         Previous
+                      </a>
+                  </li>
+                  {% endif %}
+
+                   <li class="page-item">
+                      <a class = "page-link" href = "?page={{product_objects.number}}">
+                         Previous
+                      </a>
+                  </li>
+
+                   {% if product_objects.has_next %}
+                      <li class="page-item">
+                      <a class = "page-link" href = "?page={{product_objects.next_page_number}}">
+                         Next
+                      </a>
+                  </li>
+                  {% endif %}
+
+              </ul>
+          </div>
+      </div>
+
+  </div>
+
+
+
+</body>
+<script type = "text/javascript">
+    if(localStorage.getItem('cart')==null){
+     var cart = {};}
+      else{
+       cart = JSON.parse(localStorage.getItem('cart'));
+      }
+
+
+
+
+
+      $(document).on('click','.atc',function(){
+
+        var item_id = this.id.toString();
+        if (cart[item_id] !=null) {
+            cart[item_id][0] = cart[item_id][0]+1;
+        }
+        else {
+             var docid = document.getElementById("nm"+item_id);
+             if(docid!=null){
+               cart[item_id] = [1,docid.innerHTML]
+             }
+            }
+
+
+        localStorage.setItem('cart',JSON.stringify(cart));
+
+
+        var numid = document.getElementById("cart");
+        if(numid != null){
+           var total = 0;
+            for(var x in cart){
+          total += cart[x][0];
+        }
+        numid.innerHTML = "Cart ("+total+")";
+        }
+
+      });
+
+ Displaycart(cart);
+ function Displaycart(cart){
+
+  var cartString = "";
+  var cartIndex =1;
+  cartString += "<h5>This is your cart</h5>";
+
+
+  for(var x in cart){
+  var idd = document.getElementById("nm"+x);
+    if(idd != null){
+    cartString += cartIndex+ " ";
+    var quantity = "Qty:"+cart[x][0];
+    console.log(idd.innerHTML);
+    cartString +=  idd.innerHTML + quantity+"<br>";
+    cartIndex += 1;
+    }
+
+  }
+  cartString += "<br>";
+  cartString += "<a href='/checkout'><button class = 'btn btn-warning' id = 'checkout'>Checkout</button></a>";
+  document.getElementById("cart").setAttribute('data-content',cartString);
+  $('[data-toggle="popover"]').popover()
+ }
+</script>
+</html>
+

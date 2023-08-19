@@ -1,0 +1,13 @@
+.card-text{
+ color:green;
+ font-width:800;
+}
+.card-img-top{
+ height:200px;
+ width:200px;
+}
+.card-title:hover{
+ font-width:900;
+ background: #FFC107;
+  background-color:yellow;
+}
